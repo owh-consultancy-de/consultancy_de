@@ -29,6 +29,7 @@ export interface MappingOptions {
   keepStructure: boolean // Prefix OZ to name
   usePurchasePrice: boolean // Use EP as purchase price too
   priceMarkup: number // Markup percentage for selling price
+  typeOverrides: Record<string, 'service' | 'material'> // Per-position overrides keyed by OZ/SKU
 }
 
 // Parsed File Result

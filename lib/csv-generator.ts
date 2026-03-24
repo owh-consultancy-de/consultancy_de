@@ -48,7 +48,7 @@ function mapPositionToRow(position: GAEBPosition, options: MappingOptions, usedS
   sku = ensureUniqueSKU(sku, usedSKUs)
   usedSKUs.add(sku)
 
-  // Determine type
+  // Determine type — per-position override takes highest priority
   let type: 'service' | 'material' = options.exportType
   if (position.posArt) {
     const posArtLower = position.posArt.toLowerCase()
@@ -57,6 +57,9 @@ function mapPositionToRow(position: GAEBPosition, options: MappingOptions, usedS
     } else if (posArtLower.includes('service') || posArtLower.includes('leistung') || posArtLower.includes('arbeit')) {
       type = 'service'
     }
+  }
+  if (options.typeOverrides && position.oz && options.typeOverrides[position.oz] !== undefined) {
+    type = options.typeOverrides[position.oz]
   }
 
   return {

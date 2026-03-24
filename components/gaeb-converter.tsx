@@ -20,6 +20,7 @@ const DEFAULT_OPTIONS: MappingOptions = {
   keepStructure: true,
   usePurchasePrice: true,
   priceMarkup: 0,
+  typeOverrides: {},
 }
 
 export function GAEBConverter() {
@@ -67,7 +68,20 @@ export function GAEBConverter() {
     setParseError(null)
     setParseWarnings([])
     setCurrentStep('upload')
+    setOptions(DEFAULT_OPTIONS)
   }, [])
+
+  // The PreviewTable uses the rendered SKU as the key. We need to map that back to the
+  // original OZ so the override is stored under the key the CSV generator looks up.
+  const handleTypeChange = useCallback((sku: string, type: 'service' | 'material') => {
+    // The sku in the rendered row is derived from position.oz (possibly with suffix).
+    // We match the raw OZ first; fall back to the sku itself.
+    const oz = positions.find((p) => p.oz === sku || p.oz === sku.replace(/-\d+$/, ''))?.oz ?? sku
+    setOptions((prev) => ({
+      ...prev,
+      typeOverrides: { ...prev.typeOverrides, [oz]: type },
+    }))
+  }, [positions])
 
   // Update preview when options change
   useEffect(() => {
@@ -193,7 +207,7 @@ export function GAEBConverter() {
 
             <MappingPanel options={options} onChange={setOptions} />
 
-            <PreviewTable rows={previewRows} />
+            <PreviewTable rows={previewRows} onTypeChange={handleTypeChange} />
 
             <div className="flex justify-end">
               <button

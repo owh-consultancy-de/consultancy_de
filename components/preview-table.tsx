@@ -11,9 +11,10 @@ import type { OpusFlowRow } from '@/lib/types'
 interface PreviewTableProps {
   rows: OpusFlowRow[]
   pageSize?: number
+  onTypeChange?: (sku: string, type: 'service' | 'material') => void
 }
 
-export function PreviewTable({ rows, pageSize = 10 }: PreviewTableProps) {
+export function PreviewTable({ rows, pageSize = 10, onTypeChange }: PreviewTableProps) {
   const [currentPage, setCurrentPage] = useState(0)
 
   const totalPages = Math.ceil(rows.length / pageSize)
@@ -48,7 +49,7 @@ export function PreviewTable({ rows, pageSize = 10 }: PreviewTableProps) {
           <div>
             <CardTitle>Preview</CardTitle>
             <CardDescription>
-              Showing {startIndex + 1}-{endIndex} of {rows.length} positions
+              Showing {startIndex + 1}–{endIndex} of {rows.length} positions. Click the type badge to toggle service / material per position.
             </CardDescription>
           </div>
         </div>
@@ -79,7 +80,25 @@ export function PreviewTable({ rows, pageSize = 10 }: PreviewTableProps) {
                   </TableCell>
                   <TableCell className="font-mono text-sm">{truncateText(row.sku, 20)}</TableCell>
                   <TableCell>
-                    <Badge variant={row.type === 'service' ? 'default' : 'outline'}>{row.type}</Badge>
+                    {onTypeChange ? (
+                      <button
+                        type="button"
+                        title="Click to toggle between service and material"
+                        onClick={() =>
+                          onTypeChange(row.sku, row.type === 'service' ? 'material' : 'service')
+                        }
+                        className="cursor-pointer rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      >
+                        <Badge
+                          variant={row.type === 'service' ? 'default' : 'outline'}
+                          className="transition-colors hover:opacity-80"
+                        >
+                          {row.type}
+                        </Badge>
+                      </button>
+                    ) : (
+                      <Badge variant={row.type === 'service' ? 'default' : 'outline'}>{row.type}</Badge>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
