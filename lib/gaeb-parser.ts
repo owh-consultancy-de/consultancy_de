@@ -122,7 +122,7 @@ function parseGenericXML(content: string, positions: GAEBPosition[], errors: str
  * Extract position data from GAEB DA XML Item
  */
 function extractPositionFromItem(itemXml: string): GAEBPosition | null {
-  const oz = extractTag(itemXml, 'OZ') || extractAttribute(itemXml, 'RNoPart') || '
+  const oz = extractTag(itemXml, 'OZ') || extractAttribute(itemXml, 'RNoPart') || ''
   const kurztext =
     extractTag(itemXml, 'Brief') ||
     extractTag(itemXml, 'Kurztext') ||
