@@ -122,9 +122,19 @@ function parseGenericXML(content: string, positions: GAEBPosition[], errors: str
  * Extract position data from GAEB DA XML Item
  */
 function extractPositionFromItem(itemXml: string): GAEBPosition | null {
-  const oz = extractTag(itemXml, 'OZ') || extractTag(itemXml, 'RNoPart') || ''
-  const kurztext = extractTag(itemXml, 'Brief') || extractTag(itemXml, 'Kurztext') || extractTag(itemXml, 'ShortText') || ''
-  const langtext = extractTag(itemXml, 'Detailed') || extractTag(itemXml, 'Langtext') || extractTag(itemXml, 'LongText') || ''
+  const oz = extractTag(itemXml, 'OZ') || extractAttribute(itemXml, 'RNoPart') || '
+  const kurztext =
+    extractTag(itemXml, 'Brief') ||
+    extractTag(itemXml, 'Kurztext') ||
+    extractTag(itemXml, 'ShortText') ||
+    extractTag(itemXml, 'LblTx') ||
+    ''
+  const langtext =
+    extractTag(itemXml, 'Detailed') ||
+    extractTag(itemXml, 'Langtext') ||
+    extractTag(itemXml, 'LongText') ||
+    extractTag(itemXml, 'OutlTxt') ||
+    ''
   const einheit = extractTag(itemXml, 'QU') || extractTag(itemXml, 'Einheit') || extractTag(itemXml, 'Unit') || 'Stk'
   const menge = parseFloat(extractTag(itemXml, 'Qty') || extractTag(itemXml, 'Menge') || '0') || 0
   const ep = parseFloat(extractTag(itemXml, 'UP') || extractTag(itemXml, 'EP') || extractTag(itemXml, 'UnitPrice') || '0') || 0
